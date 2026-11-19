@@ -1,0 +1,38 @@
+# Dev/test only: OpenTelemetry Collector pushing OTLP/HTTP JSON to the local app.
+# Usage: see docs/integrations/opentelemetry.md ("Try it in the dev environment").
+receivers:
+  hostmetrics:
+    collection_interval: 60s
+    root_path: /hostfs
+    scrapers:
+      cpu:
+        metrics:
+          system.cpu.time: { enabled: false }
+          system.cpu.utilization: { enabled: true }
+      memory:
+        metrics:
+          system.memory.utilization: { enabled: true }
+      load:
+      filesystem:
+        include_mount_points: { mount_points: ["/"], match_type: strict }
+        metrics:
+          system.filesystem.utilization: { enabled: true }
+
+processors:
+  resource:
+    attributes:
+      - { key: host.name, value: dev-host, action: upsert }
+
+exporters:
+  otlphttp/statusconnect:
+    # otlphttp appends /v1/metrics.
+    endpoint: http://app/ingest/${env:STATUSCONNECT_AGENT_TOKEN}
+    encoding: json
+    compression: gzip
+
+service:
+  pipelines:
+    metrics:
+      receivers: [hostmetrics]
+      processors: [resource]
+      exporters: [otlphttp/statusconnect]

@@ -1,0 +1,8 @@
+<?php
+
+// Copy to config.php (next to src/, never inside public/) when the host does
+// not let you set environment variables. Environment variables win if set.
+return [
+    'PROBE_SECRET' => 'paste the output of: openssl rand -hex 32',
+    'PROBE_LOCATION' => 'City, CC',
+];

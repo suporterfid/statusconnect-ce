@@ -1,0 +1,78 @@
+# Browser tests (e2e/, #173). Used by `stc e2e` together with compose.yaml under
+# its own project name (statusconnect-e2e), so it gets its own containers and
+# database volume and never touches the dev stack. No host ports are published.
+x-e2e-webhook-token: &webhook_token e2e-webhook-token-0123456789abcdef
+x-e2e-telegram-secret: &telegram_secret e2e-telegram-secret-0123456789abcdef
+x-e2e-whatsapp-secret: &whatsapp_secret e2e-whatsapp-secret-0123456789abcdef
+
+services:
+  app:
+    ports: !override []
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_URL: http://app
+      # Throttles and snapshots stay per request, so repeated runs start clean.
+      CACHE_STORE: array
+      SIGNUP_MODE: approval
+      LEGAL_REQUIRE_ACCEPTANCE: "true"
+      BILLING_ENABLED: "true"
+      ASAAS_ENV: sandbox
+      ASAAS_API_KEY: fake-e2e-key
+      ASAAS_SANDBOX_BASE_URL: http://target:8080/asaas/v3
+      ASAAS_WEBHOOK_TOKEN: *webhook_token
+      SECOND_LOCATION_ENABLED: "false"
+      # Telegram (#191): a fake Bot API in the target service (fake-telegram.js).
+      TELEGRAM_BOT_TOKEN: "123456:e2e-fake-token"
+      TELEGRAM_BOT_USERNAME: StatusConnectE2EBot
+      TELEGRAM_WEBHOOK_SECRET: *telegram_secret
+      TELEGRAM_API_BASE_URL: http://target:8080/telegram
+      # WhatsApp (#215): a fake Zenvia API in the target service (fake-zenvia.js).
+      ZENVIA_API_URL: http://target:8080/zenvia
+      ZENVIA_API_TOKEN: e2e-fake-zenvia-token
+      WHATSAPP_SENDER: "5511900000000"
+      WHATSAPP_WEBHOOK_SECRET: *whatsapp_secret
+      WHATSAPP_TEMPLATE_OPENED_PT: e2e-opened-pt
+      WHATSAPP_TEMPLATE_RESOLVED_PT: e2e-resolved-pt
+      WHATSAPP_TEMPLATE_TEST_PT: e2e-test-pt
+      WHATSAPP_TEMPLATE_OPENED_EN: e2e-opened-en
+      WHATSAPP_TEMPLATE_RESOLVED_EN: e2e-resolved-en
+      WHATSAPP_TEMPLATE_TEST_EN: e2e-test-en
+
+  mysql:
+    ports: !override []
+
+  mailpit:
+    ports: !override []
+
+  target:
+    ports: !override []
+    environment:
+      FAKE_ASAAS_WEBHOOK_URL: http://app/webhooks/asaas
+      FAKE_ASAAS_WEBHOOK_TOKEN: *webhook_token
+
+  playwright:
+    profiles:
+      - e2e
+    # Keep in step with @playwright/test in e2e/package.json.
+    image: mcr.microsoft.com/playwright:v1.49.1-noble
+    working_dir: /work/e2e
+    volumes:
+      - .:/work
+      - e2e_node_modules:/work/e2e/node_modules
+    environment:
+      BASE_URL: http://app
+      MAILPIT_URL: http://mailpit:8025
+      TARGET_URL: http://target:8080
+      TELEGRAM_WEBHOOK_SECRET: *telegram_secret
+      WHATSAPP_WEBHOOK_SECRET: *whatsapp_secret
+      E2E_ADMIN_EMAIL: ${E2E_ADMIN_EMAIL:-}
+      E2E_ADMIN_PASSWORD: ${E2E_ADMIN_PASSWORD:-}
+      CI: "1"
+    depends_on:
+      - app
+      - mailpit
+      - target
+
+volumes:
+  e2e_node_modules:

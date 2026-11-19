@@ -1,0 +1,13 @@
+# Used only when the web server's document root is this probe/ folder instead
+# of probe/public/ (some shared hosting panels do not let you change it).
+# Everything is served from public/; src/ and config.php are never reachable.
+Options -Indexes
+<FilesMatch "^(config\.php|README\.md|Dockerfile)$">
+    Require all denied
+</FilesMatch>
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^src(/|$) - [F,L]
+    RewriteCond %{REQUEST_URI} !/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>

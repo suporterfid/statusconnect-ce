@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         colors="true"
+>
+    <testsuites>
+        <testsuite name="Unit">
+            <directory>tests/Unit</directory>
+        </testsuite>
+        <testsuite name="Feature">
+            <directory>tests/Feature</directory>
+        </testsuite>
+        <!-- Enterprise edition (#250): the tests under tests/Enterprise. The Community Edition has no such
+             directory, and PHPUnit stops on a missing one, so the suite is tests/ minus the core folders:
+             without tests/Enterprise it is simply empty. -->
+        <testsuite name="Enterprise">
+            <directory>tests</directory>
+            <exclude>tests/Unit</exclude>
+            <exclude>tests/Feature</exclude>
+            <exclude>tests/Support</exclude>
+            <exclude>tests/Fixtures</exclude>
+        </testsuite>
+    </testsuites>
+    <source>
+        <include>
+            <directory>app</directory>
+        </include>
+    </source>
+    <php>
+        <env name="APP_KEY" value="base64:S6GG2fU6JuzCQ1Yu1ANeahWQZmE6v+OxTWHwx9c7p90=" force="true"/>
+        <env name="APP_ENV" value="testing" force="true"/>
+        <env name="APP_MAINTENANCE_DRIVER" value="file" force="true"/>
+        <env name="BCRYPT_ROUNDS" value="4" force="true"/>
+        <env name="BROADCAST_CONNECTION" value="null" force="true"/>
+        <env name="CACHE_STORE" value="array" force="true"/>
+        <!-- compose.yaml loads .env as env_file, so CACHE_STORE is also in $_SERVER, which env() reads first. Without this, rate-limit counters persist in the file cache across runs and tests get 429. -->
+        <server name="CACHE_STORE" value="array" force="true"/>
+        <env name="DB_CONNECTION" value="sqlite" force="true"/>
+        <env name="DB_DATABASE" value=":memory:" force="true"/>
+        <env name="DB_URL" value="" force="true"/>
+        <env name="MAIL_MAILER" value="array" force="true"/>
+        <env name="LEGAL_REQUIRE_ACCEPTANCE" value="false" force="true"/>
+        <server name="LEGAL_REQUIRE_ACCEPTANCE" value="false" force="true"/>
+        <env name="SIGNUP_MODE" value="closed" force="true"/>
+        <server name="SIGNUP_MODE" value="closed" force="true"/>
+        <env name="QUEUE_CONNECTION" value="sync" force="true"/>
+        <env name="SESSION_DRIVER" value="array" force="true"/>
+    </php>
+</phpunit>

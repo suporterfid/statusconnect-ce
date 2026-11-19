@@ -1,0 +1,84 @@
+name: Tests
+
+# The same Docker stack as local development (./scripts/stc.sh): PHP in the app image,
+# MySQL 8 and the test target service. The PHPUnit suite runs on SQLite in memory, as
+# `stc test` does; MySQL serves the migration check and the tests that need it.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # No host ports: nothing outside the runner needs to reach the stack.
+  APP_PORT: "0"
+  MYSQL_PORT: "0"
+  TARGET_PORT: "0"
+  MAILPIT_UI_PORT: "0"
+  MAILPIT_SMTP_PORT: "0"
+  VITE_PORT: "0"
+
+jobs:
+  dco:
+    name: DCO sign-off
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Every commit is signed off by its author
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          missing=0
+          for sha in $(git rev-list --no-merges "$BASE..$HEAD"); do
+            email="$(git log -1 --format='%ae' "$sha")"
+            if ! git log -1 --format='%(trailers:key=Signed-off-by,valueonly)' "$sha" | grep -qiF "<$email>"; then
+              echo "::error::Commit $(git log -1 --format='%h %s' "$sha") has no Signed-off-by line for its author <$email>."
+              missing=1
+            fi
+          done
+          if [ "$missing" = 1 ]; then
+            echo "Sign off with: git rebase --signoff $BASE && git push --force-with-lease (see CONTRIBUTING.md)."
+            exit 1
+          fi
+
+  phpunit:
+    name: PHPUnit
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Start MySQL and the test target
+        run: |
+          cp .env.example .env
+          docker compose up -d --build --wait mysql target
+      - name: Install PHP dependencies
+        run: docker compose run --rm app composer install --no-interaction --prefer-dist --no-progress
+      - name: Migrate on MySQL
+        run: docker compose run --rm app sh -c 'php artisan key:generate --force && php artisan migrate --force && php artisan config:cache && php artisan route:cache && php artisan optimize:clear'
+      - name: Run the test suite
+        run: docker compose run --rm -e APP_ENV=testing -e DB_CONNECTION=sqlite -e DB_DATABASE=:memory: app php artisan test
+      - name: Stop the stack
+        if: always()
+        run: docker compose down -v --remove-orphans
+
+  spa:
+    name: Operator app build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the SPA
+        run: docker compose --profile dev run --rm --no-deps node sh -c 'npm --prefix frontend ci --no-audit --no-fund && npm run build'
+      - name: Check the build output
+        run: test -f public/app/index.html

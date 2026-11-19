@@ -1,0 +1,53 @@
+name: Bug report
+description: Something does not work as documented.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Security problems go through SECURITY.md, not here.
+        Remove passwords, tokens, API keys and private addresses from logs before pasting them.
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Release tag (for example v1.0.0) or commit.
+    validations:
+      required: true
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Where does it run?
+      options:
+        - Shared hosting (cPanel, hPanel or similar)
+        - VPS or dedicated server
+        - Docker development environment (stc)
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: stack
+    attributes:
+      label: PHP and database versions
+      placeholder: PHP 8.3, MySQL 8.0
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Create an HTTP monitor for ...
+        2. ...
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Relevant lines of storage/logs/laravel.log or the browser console.
+      render: text

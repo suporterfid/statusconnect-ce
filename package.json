@@ -1,0 +1,11 @@
+{
+  "name": "statusconnect-root",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "preview": "npm --prefix frontend run preview",
+    "deploy:hostinger": "./scripts/stc.sh deploy",
+    "ship": "./scripts/stc.sh deploy"
+  }
+}
