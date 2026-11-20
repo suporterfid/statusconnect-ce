@@ -20,7 +20,7 @@ Esta é a **Community Edition**, a edição de código aberto (MIT) do StatusCon
 - **Notificações**: e-mail, webhooks, Telegram e TaskConnect.
 - **Páginas de status públicas**: componentes, histórico de disponibilidade, tempos de resposta, comunicados, domínios próprios, inscrição por e-mail, JSON e feeds. Snapshots em cache com suporte a ETag/304.
 - **Multi-organização**: organizações, ambientes, membros e papéis, chaves de API por ambiente (`sc_…`), administração da plataforma, cadastro público opcional com aprovação.
-- **API e integrações**: API REST documentada (`/api`), servidor MCP para clientes de IA, login com Google, login único com [GrandpaSSOn](https://github.com/suporterfid/grandpasson).
+- **API e integrações**: API REST documentada (`/api`), servidor MCP para clientes de IA, login com Google, login único com [GrandpaSSOn](https://github.com/suporterfid/grandpasson-ce).
 - **Requisições de saída seguras**: HTTP com DNS fixado que bloqueia endereços de loopback, privados, CGNAT, link-local e de metadados de nuvem, para que monitores não alcancem a sua rede interna.
 - **Aplicativo do operador** em Vue 3 e **páginas públicas** em Blade, em português do Brasil e inglês.
 

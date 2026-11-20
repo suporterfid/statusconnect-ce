@@ -20,7 +20,7 @@ This is the **Community Edition**, the open-source (MIT) edition of StatusConnec
 - **Notifications**: email, webhooks, Telegram and TaskConnect.
 - **Public status pages**: components, uptime history, response times, announcements, custom domains, email subscriptions, JSON and feeds. Cached snapshots with ETag/304 support.
 - **Multi-tenant**: organizations, environments, members and roles, scoped API keys (`sc_…`), platform administration, optional public sign-up with approval.
-- **API and integrations**: a documented REST API (`/api`), an MCP server for AI clients, sign in with Google, single sign-on with [GrandpaSSOn](https://github.com/suporterfid/grandpasson).
+- **API and integrations**: a documented REST API (`/api`), an MCP server for AI clients, sign in with Google, single sign-on with [GrandpaSSOn](https://github.com/suporterfid/grandpasson-ce).
 - **Safe outbound requests**: DNS-pinned HTTP that blocks loopback, private, CGNAT, link-local and cloud metadata addresses, so monitors cannot be used to reach your internal network.
 - **Operator app** in Vue 3, **public pages** in Blade, both in English and Brazilian Portuguese.
 

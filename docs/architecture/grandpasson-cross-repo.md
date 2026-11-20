@@ -6,9 +6,9 @@ StatusConnect uses GrandpaSSOn only when its feature flags are enabled. The brok
 
 | Scope | StatusConnect use | Broker status |
 | --- | --- | --- |
-| `status:read` | Machine API safe/read methods | Available in [grandpasson#117](https://github.com/suporterfid/grandpasson/pull/117) |
-| `status:write` | Machine API mutation methods | Available in [grandpasson#117](https://github.com/suporterfid/grandpasson/pull/117) |
-| `status:callback` | Reserved for StatusConnect-originated signed callbacks | Available in [grandpasson#117](https://github.com/suporterfid/grandpasson/pull/117) |
+| `status:read` | Machine API safe/read methods | Available in grandpasson#117 |
+| `status:write` | Machine API mutation methods | Available in grandpasson#117 |
+| `status:callback` | Reserved for StatusConnect-originated signed callbacks | Available in grandpasson#117 |
 
 ## Audience contract
 

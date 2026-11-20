@@ -6,7 +6,7 @@ StatusConnect supports GrandpaSSOn as an opt-in identity provider and machine-to
 
 ## Broker prerequisites
 
-GrandpaSSOn shipped `status:read`, `status:write`, and `status:callback` in [grandpasson#117](https://github.com/suporterfid/grandpasson/pull/117). Create two different registrations; the browser RP client cannot introspect machine tokens, and the service client cannot perform browser login.
+GrandpaSSOn shipped `status:read`, `status:write`, and `status:callback` in grandpasson#117. Create two different registrations; the browser RP client cannot introspect machine tokens, and the service client cannot perform browser login.
 
 ```bash
 # Browser code exchange client: exact callback URL and confidential secret.

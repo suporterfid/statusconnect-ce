@@ -14,7 +14,7 @@
 - **Reference deployment profile:** shared hosting without VPS, Redis, long-running workers, or process supervisors
 - **Development environment:** Docker only (no host PHP/Composer/Node)
 - **Initial interface languages:** English (`en`) and Brazilian Portuguese (`pt-BR`)
-- **Sibling projects:** [`taskconnect`](https://github.com/suporterfid/taskconnect) (architecture donor), [`grandpasson`](https://github.com/suporterfid/grandpasson) (identity), [`jotter`](https://github.com/suporterfid/jotter)
+- **Sibling projects:** [`taskconnect`](https://github.com/suporterfid/taskconnect) (architecture donor), [`grandpasson`](https://github.com/suporterfid/grandpasson-ce) (identity), [`jotter`](https://github.com/suporterfid/jotter)
 
 ---
 
@@ -801,10 +801,10 @@ Then set the `GRANDPASSON_*` values in StatusConnect and flip the enable flags.
 
 **Cross-repo dependency — this is a hard blocker for inbound mode.** GrandpaSSOn's scope vocabulary is a **static allowlist** in `app/Domain/ScopeVocabulary.php`; there is no dynamic scope registration, and `client:create-service` aborts on an unknown scope. The scopes `status:read`, `status:write`, and `status:callback` **do not exist today**. Therefore:
 
-> **Implementation update (2026-08-04):** GrandpaSSOn delivered all three scopes in [#117](https://github.com/suporterfid/grandpasson/pull/117). The remaining live-verification inputs are the documented operator registrations, credentials, and local tenant mapping.
+> **Implementation update (2026-08-04):** GrandpaSSOn delivered all three scopes in grandpasson#117. The remaining live-verification inputs are the documented operator registrations, credentials, and local tenant mapping.
 >
 
-- The scope request was delivered by [grandpasson#117](https://github.com/suporterfid/grandpasson/pull/117); live verification now requires operator-created registrations, credentials, and an explicit tenant mapping.
+- The scope request was delivered by grandpasson#117; live verification now requires operator-created registrations, credentials, and an explicit tenant mapping.
 - `docs/architecture/grandpasson-cross-repo.md` **MUST** track the status of each scope, mirroring how TaskConnect tracks `tasks:write`.
 - PR13 **MUST** keep flags defaulted off and be tested against fakes. v0 **MUST NOT** be blocked on deployment configuration.
 
@@ -1250,4 +1250,4 @@ Operator journey (log in → create monitor → observe a result → force a fai
 
 MIT. See `LICENSE`.
 
-Patterns are adapted from [`suporterfid/taskconnect`](https://github.com/suporterfid/taskconnect) and [`suporterfid/grandpasson`](https://github.com/suporterfid/grandpasson), both MIT and under the same ownership.
+Patterns are adapted from [`suporterfid/taskconnect`](https://github.com/suporterfid/taskconnect) and [`suporterfid/grandpasson-ce`](https://github.com/suporterfid/grandpasson-ce), both MIT and under the same ownership.
