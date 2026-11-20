@@ -22,7 +22,7 @@ class TelegramLinkTest extends TestCase
 
     private const TOKEN = '123456789:AAFakeTelegramTokenForTests_abcdefghij';
 
-    private const SECRET = 'whsec_0123456789abcdefghijklmnopqrstuv';
+    private const SECRET = 'test-telegram-webhook-secret-0123456789';
 
     private ProvisionedAccount $account;
 
